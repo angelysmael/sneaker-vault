@@ -65,7 +65,6 @@ export default function Home() {
             alt="Sneaker collage"
             style={{
               width: "100%",
-              maxWidth: "600px",
               height: "450px",
               objectFit: "cover",
               borderRadius: "10px",
