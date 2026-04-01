@@ -76,6 +76,7 @@ export default function SneakerCard({ sneaker }) {
       <p>${sneaker.price}</p>
 
       <button
+        type="button"
         onClick={handleFavoriteToggle}
         style={{
           marginTop: "10px",
