@@ -10,8 +10,9 @@ export default function SneakersPage() {
   const [filterBy, setFilterBy] = useState("all");
 
   const filteredAndSortedSneakers = useMemo(() => {
-    let updatedSneakers = [...sneakers];
+    let updatedSneakers = [...sneakers].filter(Boolean);
 
+    // FILTER
     if (filterBy === "nike") {
       updatedSneakers = updatedSneakers.filter((shoe) =>
         shoe.name.toLowerCase().includes("nike") ||
@@ -33,6 +34,7 @@ export default function SneakersPage() {
       );
     }
 
+    // SORT
     if (sortBy === "low-high") {
       updatedSneakers.sort((a, b) => a.price - b.price);
     }
@@ -64,6 +66,7 @@ export default function SneakersPage() {
         <h1>All Sneakers</h1>
         <p>Browse the latest sneaker collection.</p>
 
+        {/* CONTROLS */}
         <div
           style={{
             display: "flex",
@@ -110,12 +113,12 @@ export default function SneakersPage() {
           </div>
         </div>
 
+        {/* GRID */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
             gap: "20px",
-            marginTop: "30px",
           }}
         >
           {filteredAndSortedSneakers.map((s) => (

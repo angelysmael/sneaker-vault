@@ -7,19 +7,34 @@ export default function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorites(storedFavorites);
+    const loadFavorites = () => {
+      const storedFavorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+      setFavorites(storedFavorites);
+    };
+
+    loadFavorites();
+
+    window.addEventListener("favoritesUpdated", loadFavorites);
+    window.addEventListener("storage", loadFavorites);
+
+    return () => {
+      window.removeEventListener("favoritesUpdated", loadFavorites);
+      window.removeEventListener("storage", loadFavorites);
+    };
   }, []);
 
   const removeFromFavorites = (id) => {
     const updatedFavorites = favorites.filter((shoe) => shoe.id !== id);
     setFavorites(updatedFavorites);
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    window.dispatchEvent(new Event("favoritesUpdated"));
   };
 
   const clearAll = () => {
     setFavorites([]);
     localStorage.removeItem("favorites");
+    window.dispatchEvent(new Event("favoritesUpdated"));
   };
 
   return (
@@ -56,7 +71,7 @@ export default function FavoritesPage() {
         </button>
 
         {favorites.length === 0 ? (
-          <p>No favorites yet :( </p>
+          <p>No favorites yet :(</p>
         ) : (
           <div
             style={{

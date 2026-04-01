@@ -1,26 +1,44 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function SneakerCard({ sneaker }) {
   const [added, setAdded] = useState(false);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("favorites")) || [];
-    const exists = stored.find((item) => item.id === sneaker.id);
-    if (exists) {
-      setAdded(true);
-    }
+    const loadFavoriteStatus = () => {
+      const stored = JSON.parse(localStorage.getItem("favorites")) || [];
+      const exists = stored.some((item) => item.id === sneaker.id);
+      setAdded(exists);
+    };
+
+    loadFavoriteStatus();
+
+    window.addEventListener("favoritesUpdated", loadFavoriteStatus);
+    window.addEventListener("storage", loadFavoriteStatus);
+
+    return () => {
+      window.removeEventListener("favoritesUpdated", loadFavoriteStatus);
+      window.removeEventListener("storage", loadFavoriteStatus);
+    };
   }, [sneaker.id]);
 
-  const handleAdd = () => {
+  const handleFavoriteToggle = () => {
     const stored = JSON.parse(localStorage.getItem("favorites")) || [];
+    const exists = stored.some((item) => item.id === sneaker.id);
 
-    if (!stored.find((item) => item.id === sneaker.id)) {
-      const updated = [...stored, sneaker];
-      localStorage.setItem("favorites", JSON.stringify(updated));
+    let updated;
+
+    if (exists) {
+      updated = stored.filter((item) => item.id !== sneaker.id);
+      setAdded(false);
+    } else {
+      updated = [...stored, sneaker];
       setAdded(true);
     }
+
+    localStorage.setItem("favorites", JSON.stringify(updated));
+    window.dispatchEvent(new Event("favoritesUpdated"));
   };
 
   return (
@@ -58,15 +76,16 @@ export default function SneakerCard({ sneaker }) {
       <p>${sneaker.price}</p>
 
       <button
-        onClick={handleAdd}
+        onClick={handleFavoriteToggle}
         style={{
           marginTop: "10px",
           padding: "10px",
-          background: added ? "gray" : "#ff4d4d",
+          background: added ? "#666" : "#ff4d4d",
           border: "none",
           borderRadius: "8px",
           color: "white",
           cursor: "pointer",
+          fontWeight: "bold",
         }}
       >
         {added ? "Added ❤️" : "Add to Favorites ❤️"}

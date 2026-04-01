@@ -1,69 +1,91 @@
 "use client";
 
-import { useState } from "react";
 import SneakerCard from "../components/SneakerCard";
 import { sneakers } from "../data/sneakers";
 import Navbar from "../components/Navbar";
 
 export default function Home() {
-  const [favorites, setFavorites] = useState([]);
-
-  const addToFavorites = (sneaker) => {
-    setFavorites([...favorites, sneaker]);
-  };
-
   return (
-    <div style={{ 
-      background: "#ffffff", 
-      color: "white", 
-      minHeight: "100vh" 
-    }}>
+    <div
+      style={{
+        background: "#ffffff",
+        color: "white",
+        minHeight: "100vh",
+        position: "relative",
+      }}
+    >
       <Navbar />
 
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "60px"
-      }}>
-        
-        {/* LEFT SIDE TEXT */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "60px",
+        }}
+      >
         <div>
-          <h1 style={{ fontSize: "100px", marginBottom: "10px", color: "#000000", fontWeight: "bold", fontFamily: "Arial, sans-serif" }}>
+          <h1
+            style={{
+              fontSize: "100px",
+              marginBottom: "10px",
+              color: "#000000",
+              fontWeight: "bold",
+              fontFamily: "Arial, sans-serif",
+            }}
+          >
             STEP INTO <br /> STYLE
           </h1>
-          <p style={{ fontSize: "20px", fontWeight: "bold", color: "#000000" }}>
+          <p
+            style={{
+              fontSize: "20px",
+              fontWeight: "bold",
+              color: "#000000",
+            }}
+          >
             Discover the latest sneakers 🔥
           </p>
         </div>
 
-        {/* RIGHT IMAGE */}
-        <img 
-          src="/sneaker.png"
+        <img
+          src={`${process.env.NODE_ENV === "production" ? "/sneaker-vault" : ""}/sneaker.png`}
+          alt="Sneaker collage"
           style={{
             width: "100%",
             height: "450px",
             objectFit: "cover",
-            borderRadius: "10px"
+            borderRadius: "10px",
           }}
         />
       </div>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "20px",
-        padding: "40px"
-      }}>
-        {sneakers.map((s) => (
-<SneakerCard 
-  key={s.id} 
-  sneaker={s} 
-  addToFavorites={addToFavorites}
-/>
-        ))}
-    
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "20px",
+          padding: "40px",
+        }}
+      >
+        {sneakers
+          .filter(Boolean)
+          .map((s) => (
+            <SneakerCard key={s.id} sneaker={s} />
+          ))}
       </div>
+
+      <img
+        src={`${process.env.NODE_ENV === "production" ? "/sneaker-vault" : ""}/sneaker.gif`}
+        alt="Floating sneaker"
+        style={{
+          position: "absolute",
+          bottom: "40px",
+          right: "40px",
+          width: "220px",
+          zIndex: 10,
+          pointerEvents: "none",
+        }}
+      />
     </div>
   );
 }
