@@ -51,6 +51,8 @@ export default function SneakerCard({ sneaker }) {
         textAlign: "center",
         fontFamily: "Arial, sans-serif",
         fontWeight: "bold",
+        position: "relative",
+        zIndex: 3,
       }}
     >
       <div
@@ -68,6 +70,7 @@ export default function SneakerCard({ sneaker }) {
             maxHeight: "100%",
             maxWidth: "100%",
             objectFit: "contain",
+            pointerEvents: "none",
           }}
         />
       </div>
@@ -87,6 +90,8 @@ export default function SneakerCard({ sneaker }) {
           color: "white",
           cursor: "pointer",
           fontWeight: "bold",
+          position: "relative",
+          zIndex: 4,
         }}
       >
         {added ? "Added ❤️" : "Add to Favorites ❤️"}
