@@ -6,23 +6,29 @@ import SneakerCard from "../../components/SneakerCard";
 import { sneakers } from "../../data/sneakers";
 
 export default function SneakersPage() {
+  // State for sorting option
   const [sortBy, setSortBy] = useState("default");
+
+  // State for filtering option
   const [filterBy, setFilterBy] = useState("all");
 
+  // Copy sneakers array so we don’t modify original data
   let displayedSneakers = [...sneakers];
 
+  // Filter sneakers based on selected brand
   if (filterBy !== "all") {
     displayedSneakers = displayedSneakers.filter(
       (shoe) => shoe.brand?.toLowerCase() === filterBy.toLowerCase()
     );
   }
 
+  // Sort sneakers based on selected option
   if (sortBy === "low") {
-    displayedSneakers.sort((a, b) => a.price - b.price);
+    displayedSneakers.sort((a, b) => a.price - b.price); // lowest price first
   } else if (sortBy === "high") {
-    displayedSneakers.sort((a, b) => b.price - a.price);
+    displayedSneakers.sort((a, b) => b.price - a.price); // highest price first
   } else if (sortBy === "name") {
-    displayedSneakers.sort((a, b) => a.name.localeCompare(b.name));
+    displayedSneakers.sort((a, b) => a.name.localeCompare(b.name)); // alphabetical
   }
 
   return (
@@ -56,6 +62,7 @@ export default function SneakersPage() {
           Browse the latest sneaker collection.
         </p>
 
+        {/* Sorting + Filtering controls */}
         <div
           style={{
             display: "flex",
@@ -65,6 +72,7 @@ export default function SneakersPage() {
             flexWrap: "wrap",
           }}
         >
+          {/* Sort dropdown */}
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <label style={{ color: "#000", fontWeight: "bold" }}>Sort by:</label>
             <select
@@ -84,6 +92,7 @@ export default function SneakersPage() {
             </select>
           </div>
 
+          {/* Filter dropdown */}
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <label style={{ color: "#000", fontWeight: "bold" }}>Filter by:</label>
             <select
@@ -104,6 +113,7 @@ export default function SneakersPage() {
           </div>
         </div>
 
+        {/* Display sneakers in grid */}
         <div
           style={{
             display: "grid",

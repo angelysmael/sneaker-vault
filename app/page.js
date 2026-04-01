@@ -14,8 +14,10 @@ export default function Home() {
         position: "relative",
       }}
     >
+      {/* Navigation bar at the top */}
       <Navbar />
 
+      {/* Hero section (title + image) */}
       <div
         style={{
           display: "flex",
@@ -26,6 +28,7 @@ export default function Home() {
           flexWrap: "wrap",
         }}
       >
+        {/* Text section */}
         <div style={{ flex: "1 1 400px" }}>
           <h1
             style={{
@@ -51,6 +54,7 @@ export default function Home() {
           </p>
         </div>
 
+        {/* Hero image */}
         <div
           style={{
             flex: "1 1 400px",
@@ -74,6 +78,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Sneaker cards grid */}
       <div
         style={{
           display: "grid",
@@ -84,25 +89,13 @@ export default function Home() {
           zIndex: 2,
         }}
       >
+        {/* Loop through sneakers and display each card */}
         {sneakers.filter(Boolean).map((s) => (
           <SneakerCard key={s.id} sneaker={s} />
         ))}
       </div>
 
-      <img
-        src={`${
-          process.env.NODE_ENV === "production" ? "/sneaker-vault" : ""
-        }/sneaker.gif`}
-        alt="Floating sneaker"
-        style={{
-          position: "absolute",
-          bottom: "40px",
-          right: "40px",
-          width: "220px",
-          zIndex: 1,
-          pointerEvents: "none",
-        }}
-      />
+
     </div>
   );
 }

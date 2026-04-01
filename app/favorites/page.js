@@ -4,36 +4,58 @@ import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 
 export default function FavoritesPage() {
+  // State to store all favorite sneakers
   const [favorites, setFavorites] = useState([]);
 
+  // Runs once when the page loads
   useEffect(() => {
+    // Function to load favorites from localStorage
     const loadFavorites = () => {
       const storedFavorites =
         JSON.parse(localStorage.getItem("favorites")) || [];
       setFavorites(storedFavorites);
     };
 
+    // Load favorites initially
     loadFavorites();
 
+    // Listen for updates from other components/pages
     window.addEventListener("favoritesUpdated", loadFavorites);
+
+    // Listen for changes across tabs (browser storage event)
     window.addEventListener("storage", loadFavorites);
 
+    // Cleanup event listeners when component unmounts
     return () => {
       window.removeEventListener("favoritesUpdated", loadFavorites);
       window.removeEventListener("storage", loadFavorites);
     };
   }, []);
 
+  // Remove a single sneaker from favorites
   const removeFromFavorites = (id) => {
+    // Filter out the selected sneaker
     const updatedFavorites = favorites.filter((shoe) => shoe.id !== id);
+
+    // Update state
     setFavorites(updatedFavorites);
+
+    // Save updated list to localStorage
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+
+    // Notify other components that favorites changed
     window.dispatchEvent(new Event("favoritesUpdated"));
   };
 
+  // Clear all favorites
   const clearAll = () => {
+    // Reset state
     setFavorites([]);
+
+    // Remove favorites from localStorage
     localStorage.removeItem("favorites");
+
+    // Notify other components
     window.dispatchEvent(new Event("favoritesUpdated"));
   };
 
@@ -52,6 +74,7 @@ export default function FavoritesPage() {
       <div style={{ padding: "40px" }}>
         <h1>Your Favorites ❤️</h1>
 
+        {/* Button to clear all favorite items */}
         <button
           onClick={clearAll}
           style={{
@@ -64,15 +87,18 @@ export default function FavoritesPage() {
             cursor: "pointer",
             transition: "0.3s",
           }}
+          // Hover effect for better UI feedback
           onMouseEnter={(e) => (e.target.style.background = "#777")}
           onMouseLeave={(e) => (e.target.style.background = "#555")}
         >
           Clear All
         </button>
 
+        {/* If no favorites exist, show message */}
         {favorites.length === 0 ? (
           <p>No favorites yet :(</p>
         ) : (
+          // Grid layout for displaying favorite sneakers
           <div
             style={{
               display: "grid",
@@ -92,6 +118,7 @@ export default function FavoritesPage() {
                   textAlign: "center",
                 }}
               >
+                {/* Sneaker image container */}
                 <div
                   style={{
                     height: "160px",
@@ -111,9 +138,11 @@ export default function FavoritesPage() {
                   />
                 </div>
 
+                {/* Sneaker details */}
                 <h3>{shoe.name}</h3>
                 <p>${shoe.price}</p>
 
+                {/* Remove button */}
                 <button
                   onClick={() => removeFromFavorites(shoe.id)}
                   style={{
