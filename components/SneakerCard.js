@@ -6,39 +6,37 @@ export default function SneakerCard({ sneaker }) {
   const [added, setAdded] = useState(false);
 
   useEffect(() => {
-    const loadFavoriteStatus = () => {
+    try {
       const stored = JSON.parse(localStorage.getItem("favorites")) || [];
       const exists = stored.some((item) => item.id === sneaker.id);
       setAdded(exists);
-    };
-
-    loadFavoriteStatus();
-
-    window.addEventListener("favoritesUpdated", loadFavoriteStatus);
-    window.addEventListener("storage", loadFavoriteStatus);
-
-    return () => {
-      window.removeEventListener("favoritesUpdated", loadFavoriteStatus);
-      window.removeEventListener("storage", loadFavoriteStatus);
-    };
+    } catch (error) {
+      console.error("Error loading favorites:", error);
+    }
   }, [sneaker.id]);
 
   const handleFavoriteToggle = () => {
-    const stored = JSON.parse(localStorage.getItem("favorites")) || [];
-    const exists = stored.some((item) => item.id === sneaker.id);
+    console.log("Button clicked:", sneaker);
 
-    let updated;
+    try {
+      const stored = JSON.parse(localStorage.getItem("favorites")) || [];
+      const exists = stored.some((item) => item.id === sneaker.id);
 
-    if (exists) {
-      updated = stored.filter((item) => item.id !== sneaker.id);
-      setAdded(false);
-    } else {
-      updated = [...stored, sneaker];
-      setAdded(true);
+      let updated;
+
+      if (exists) {
+        updated = stored.filter((item) => item.id !== sneaker.id);
+        setAdded(false);
+      } else {
+        updated = [...stored, sneaker];
+        setAdded(true);
+      }
+
+      localStorage.setItem("favorites", JSON.stringify(updated));
+      window.dispatchEvent(new Event("favoritesUpdated"));
+    } catch (error) {
+      console.error("Error updating favorites:", error);
     }
-
-    localStorage.setItem("favorites", JSON.stringify(updated));
-    window.dispatchEvent(new Event("favoritesUpdated"));
   };
 
   return (
